@@ -1,0 +1,52 @@
+import os
+from pathlib import Path
+
+DIRECTORIES = {
+    "HTML": [".html5", ".html", ".htm", ".xhtml"],
+    "MARKUP": [".md"],
+    "IMAGES": [".jpeg", ".jpg", ".gif", ".png", "svg", ".heif", ".img", ".dmg"],
+    "VIDEOS": [".mp4", ".webm", ".mng", ".mpg", ".mpeg", ".3gp",".mkv"],
+    "DOCUMENTS": [".oxps", ".pages", ".docx", ".doc", ".fdf", ".dotx", ".docm", ".dox",
+                  ".rvg", ".rtf", ".rtfd", ".wpd", ".xls", ".xlsx", ".ppt",
+                  ".pptx", ".numbers"],
+    "ARCHIVES": [".a", ".ar", ".arh",".tar",".tar.bz2",".tar.gz",".cpio", ".tar", ".gz", ".rz", ".7z",
+                 ".rar", ".xar", ".zip",".xz",".pkg",".deb",".rpm"],
+    "AUDIO": [".m4a", ".m4b", ".m4p", ".mp3", ".msv"],
+    "PLAINTEXT": [".txt"],
+    "PDF": [".pdf"],
+    "PYTHON": [".py",".pyi",".ipynb"],
+    "EXECUTABLE": [".exe",".run"],
+    "SHELL": [".sh"],
+    "DATABASE":[".db",".sql"],
+    "C#" :[".cs"],
+    "C++": [".cpp"],
+    "C": [".c"],
+    "CSS": [".css"],
+    "APPS": [".app",".ipa",".apk"],
+    "LINKS":[".webloc",".lnk"]
+
+}
+
+FILE_FORMATS = {file_format: directory
+				for directory, file_formats in DIRECTORIES.items()
+				for file_format in file_formats}
+
+def orgaziner():
+	for entry in os.scandir():
+		if entry.is_dir():
+			continue
+		file_path = Path(entry)
+		file_format = file_path.suffix.lower()
+		if file_format in FILE_FORMATS:
+			directory_path = Path(FILE_FORMATS[file_format])
+			directory_path.mkdir(exist_ok=True)
+			file_path.rename(directory_path.joinpath(file_path))
+
+		for dir in os.scandir():
+			try:
+				os.rmdir(dir)
+			except:
+				pass
+
+if __name__ == "__main__":
+	orgaziner()
